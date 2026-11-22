@@ -92,18 +92,32 @@ document.querySelectorAll('[data-config-action]').forEach(button => {
   button.addEventListener('click', event => {
     event.preventDefault();
     const type = button.dataset.configAction;
+    const affiliateUrl = Object.values(RANTEX_CONFIG.affiliateLinks).find(value => value && /^https:\/\//i.test(value));
     const url = type === 'premium' ? RANTEX_CONFIG.premiumCheckoutUrl
-      : type === 'membership' ? RANTEX_CONFIG.membershipCheckoutUrl : "";
+      : type === 'membership' ? RANTEX_CONFIG.membershipCheckoutUrl
+      : type === 'affiliate' ? affiliateUrl : "";
     if (url && /^https:\/\//i.test(url)) {
       window.open(url, '_blank', 'noopener,noreferrer');
       return;
     }
     const message = type === 'affiliate'
-      ? 'Affiliate products are not configured yet. Add genuine product links in RANTEX_CONFIG. Clearly disclose affiliate links.'
+      ? 'Affiliate links are not configured yet. Add your approved affiliate product URLs in RANTEX_CONFIG and publish again.'
       : 'This payment option is not active yet. First create a secure payment link, add delivery/refund details, then paste the link into RANTEX_CONFIG.';
     alert(message);
   });
 });
+if (RANTEX_CONFIG.adsense.approved && /^ca-pub-[0-9]+$/.test(RANTEX_CONFIG.adsense.publisherId) && /^[0-9]+$/.test(RANTEX_CONFIG.adsense.adSlotId)) {
+  const ads = document.createElement('script');
+  ads.async = true;
+  ads.crossOrigin = 'anonymous';
+  ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(RANTEX_CONFIG.adsense.publisherId);
+  document.head.appendChild(ads);
+  const slot = document.getElementById('ad-space');
+  slot.innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="' +
+    RANTEX_CONFIG.adsense.publisherId + '" data-ad-slot="' + RANTEX_CONFIG.adsense.adSlotId +
+    '" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+  (window.adsbygoogle = window.adsbygoogle || []).push({});
+}
 if (RANTEX_CONFIG.googleAnalyticsId && /^G-[A-Z0-9]+$/.test(RANTEX_CONFIG.googleAnalyticsId)) {
   const ga = document.createElement('script');
   ga.async = true;
