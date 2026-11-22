@@ -68,7 +68,62 @@ function render(){let q=document.getElementById('search').value.toLowerCase(),li
 document.getElementById('chips').addEventListener('click',e=>{if(e.target.dataset.cat){category=e.target.dataset.cat;document.querySelectorAll('.chip').forEach(b=>b.classList.toggle('active',b===e.target));render()}});
 document.getElementById('search').addEventListener('input',render);document.getElementById('sort').addEventListener('change',render);
 document.body.addEventListener('click',e=>{let s=e.target.dataset.save,d=e.target.dataset.download;if(s!==undefined){let i=Number(s);saved=saved.includes(i)?saved.filter(x=>x!==i):[...saved,i];localStorage.setItem('rantexSaved',JSON.stringify(saved));render()}if(d!==undefined){let a=document.createElement('a');a.href=items[Number(d)][2];a.target='_blank';a.rel='noopener';a.click()}});
-document.getElementById('generate').addEventListener('click',()=>{let p=document.getElementById('prompt').value.trim();document.getElementById('genmsg').textContent=p.length<8?'Please enter a more detailed idea.':'Your prompt is ready! AI generation will be enabled after we connect the secure API.'});
+document.getElementById('generate').addEventListener('click', async () => {
+  const button = document.getElementById('generate');
+  const message = document.getElementById('genmsg');
+  const prompt = document.getElementById('prompt').value.trim();
+  if (prompt.length < 8) {
+    message.textContent = 'Please enter a more detailed idea (at least 8 characters).';
+    return;
+  }
+  button.disabled = true;
+  button.textContent = '✦ Creating your wallpaper...';
+  message.textContent = 'RANTEX AI is creating your wallpaper. This may take a little while.';
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    if (!response.ok) {
+      let errorMessage = 'Image generation failed. Please try again.';
+      try { const data = await response.json(); if (data.error) errorMessage = data.error; } catch {}
+      throw new Error(errorMessage);
+    }
+    const imageBlob = await response.blob();
+    if (!imageBlob.type.startsWith('image/')) throw new Error('The server returned an unexpected response. Please try again.');
+    const imageUrl = URL.createObjectURL(imageBlob);
+    let result = document.getElementById('generated-result');
+    if (!result) {
+      result = document.createElement('div');
+      result.id = 'generated-result';
+      result.style.cssText = 'margin-top:18px;display:grid;gap:12px';
+      document.querySelector('#studio .studio').appendChild(result);
+    } else {
+      const oldUrl = result.dataset.objectUrl;
+      if (oldUrl) URL.revokeObjectURL(oldUrl);
+    }
+    result.dataset.objectUrl = imageUrl;
+    result.innerHTML = '';
+    const image = document.createElement('img');
+    image.src = imageUrl;
+    image.alt = 'Your newly generated RANTEX wallpaper';
+    image.style.cssText = 'display:block;width:100%;max-height:620px;object-fit:contain;border-radius:16px;background:#080b18';
+    const download = document.createElement('a');
+    download.href = imageUrl;
+    download.download = 'rantex-wallpaper.jpg';
+    download.className = 'btn primary';
+    download.textContent = '⬇ Download wallpaper';
+    download.style.cssText = 'width:max-content;text-decoration:none';
+    result.append(image, download);
+    message.textContent = 'Your wallpaper is ready! You can preview it above and download it below.';
+  } catch (error) {
+    message.textContent = error.message || 'Something went wrong. Please try again.';
+  } finally {
+    button.disabled = false;
+    button.textContent = '✦ Generate wallpaper';
+  }
+});
 
 // ---- RANTEX MONETIZATION SETTINGS ----
 // Add real URLs/IDs only after the relevant account is approved and configured.
