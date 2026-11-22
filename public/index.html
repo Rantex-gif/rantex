@@ -12,16 +12,42 @@ header{height:76px;border-bottom:1px solid var(--line);display:flex;align-items:
 section{padding:35px 0 60px}.heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}.heading h2{font-size:32px;margin:7px 0}.muted{color:var(--muted)}.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.tools input,.tools select{background:#11152a;border:1px solid var(--line);color:white;border-radius:10px;padding:12px}.tools input{flex:1;min-width:220px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.chip{background:#14182d;border:1px solid var(--line);color:#c6cbe2;padding:8px 13px;border-radius:30px;cursor:pointer}.chip.active{border-color:var(--purple);background:#8b5cf633;color:white}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.card img{width:100%;height:220px;object-fit:cover;display:block}.cardbody{padding:14px}.cardbody strong{display:block}.meta{color:var(--muted);font-size:12px;margin:6px 0 12px}.card button{background:#202644;border:1px solid #343c63;color:white;border-radius:8px;padding:8px 12px;cursor:pointer}.studio{padding:25px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(135deg,#1b1838,#10172b)}textarea{width:100%;min-height:110px;background:#0c1021;color:white;border:1px solid var(--line);border-radius:12px;padding:14px;font:inherit}.notice{font-size:13px;color:#e9d7a3;line-height:1.6}.empty{padding:30px;text-align:center;color:var(--muted)}footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
 @media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:48px}.hero-img{height:250px}nav{gap:12px}nav a{font-size:12px}.grid{grid-template-columns:repeat(2,1fr)}.card img{height:160px}.heading h2{font-size:26px}}
 @media(max-width:480px){nav{display:none}.grid{grid-template-columns:1fr}.card img{height:210px}.wrap{width:calc(100% - 26px)}}
+
+/* RANTEX monetization */
+.money-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.money-card{background:linear-gradient(145deg,#171d38,#101426);border:1px solid #343b62;border-radius:17px;padding:20px}
+.money-card h3{margin:8px 0}.money-card p{color:var(--muted);line-height:1.6;font-size:14px}
+.money-card .price{font-size:25px;font-weight:850;color:var(--cyan)}
+.money-tag{display:inline-block;padding:5px 9px;border-radius:30px;background:#67e8f922;color:var(--cyan);font-size:11px;font-weight:800}
+.ad-slot{margin:22px 0;padding:22px;text-align:center;border:1px dashed #485071;border-radius:14px;color:var(--muted);font-size:13px}
+.legal-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}.legal-links a{color:#c6cbe2}
+@media(max-width:760px){.money-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
-<header class="wrap"><a class="brand" href="#">RAN<b>✦</b>TEX</a><nav><a href="#explore">Explore</a><a href="#studio">AI Studio</a><a href="#favorites">Favorites</a></nav><a class="btn primary" href="#explore">Explore wallpapers</a></header>
+<header class="wrap"><a class="brand" href="#">RAN<b>✦</b>TEX</a><nav><a href="#explore">Explore</a><a href="#studio">AI Studio</a><a href="#favorites">Favorites</a><a href="#support-rantex">Support</a></nav><a class="btn primary" href="#explore">Explore wallpapers</a></header>
 <main>
 <div class="wrap hero"><div><div class="eyebrow">YOUR DIGITAL CANVAS</div><h1>Make your screen <span class="grad">legendary.</span></h1><p>Discover striking wallpapers for your phone and desktop. Explore the collection, save your favorites and build your own visual universe.</p><div class="actions"><a class="btn primary" href="#explore">Explore collection ↗</a><a class="btn" href="#studio">AI Studio ✦</a></div></div><img class="hero-img" src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85" alt="Colorful cosmic nebula"></div>
 <section class="wrap" id="explore"><div class="heading"><div><div class="eyebrow">THE COLLECTION</div><h2>Explore the universe</h2><div class="muted">Find a wallpaper that feels like yours.</div></div><div id="count" class="muted">12 wallpapers</div></div><div class="tools"><input id="search" placeholder="Search space, nature, gaming..." aria-label="Search wallpapers"><select id="sort"><option value="featured">Featured</option><option value="az">Name A–Z</option></select></div><div class="chips" id="chips"><button class="chip active" data-cat="All">All</button><button class="chip" data-cat="Space">Space</button><button class="chip" data-cat="Nature">Nature</button><button class="chip" data-cat="Cyberpunk">Cyberpunk</button><button class="chip" data-cat="Minimal">Minimal</button><button class="chip" data-cat="Anime">Anime</button><button class="chip" data-cat="Gaming">Gaming</button></div><div class="grid" id="gallery"></div><div id="empty" class="empty" hidden>No matching wallpapers. Try another search.</div></section>
 <section class="wrap" id="studio"><div class="eyebrow">CREATE SOMETHING NEW</div><h2>RANTEX AI Studio</h2><div class="studio"><h3>Imagine it. Generate it.</h3><p class="muted">Describe your dream wallpaper. AI generation will activate after we connect a secure image-generation API.</p><textarea id="prompt" maxlength="700" placeholder="A futuristic neon city floating above the clouds, violet and cyan lights, cinematic atmosphere..."></textarea><p><button class="btn primary" id="generate">✦ Prepare my wallpaper</button></p><p class="notice" id="genmsg">AI image generation is not connected yet. This preview version is free to host; actual AI generation may require an API key and paid usage.</p></div></section>
 <section class="wrap" id="favorites"><div class="eyebrow">YOUR PERSONAL COLLECTION</div><h2>Favorites</h2><div class="grid" id="saved"></div><div id="noSaved" class="muted">Tap ♡ on a wallpaper to save it here.</div></section>
-</main><footer><div class="wrap">© <span id="year"></span> RANTEX · CREATE YOUR OWN UNIVERSE.</div></footer>
+</main>
+<section class="wrap" id="support-rantex">
+  <div class="eyebrow">SUPPORT THE UNIVERSE</div>
+  <div class="heading"><div><h2>Unlock more from RANTEX</h2><div class="muted">Free wallpapers stay free. Optional extras help us create more original art.</div></div></div>
+  <div class="money-grid">
+    <article class="money-card"><span class="money-tag">CREATOR PICKS</span><h3>Premium wallpaper pack</h3><div class="price">₹49</div><p>Curated high-resolution wallpaper bundle. Purchase checkout will be enabled once the store link is configured.</p><a class="btn primary" href="#premium-info" data-config-action="premium">Get the pack</a></article>
+    <article class="money-card"><span class="money-tag">RECOMMENDED GEAR</span><h3>Creator & gaming gear</h3><div class="price">Explore picks</div><p>Discover useful accessories for your phone, gaming setup and displays. Affiliate links may earn RANTEX a commission at no extra cost to you.</p><a class="btn" href="#affiliate-info" data-config-action="affiliate">View recommendations</a></article>
+    <article class="money-card"><span class="money-tag">MEMBER SUPPORT</span><h3>RANTEX supporter</h3><div class="price">₹99 / month</div><p>Support new collections and future features. Membership payments will be enabled after a secure payment link is added.</p><a class="btn" href="#membership-info" data-config-action="membership">Become a supporter</a></article>
+  </div>
+  <div class="ad-slot" id="ad-space"><strong>Advertisement space</strong><br>Ads will appear here only after your AdSense account is approved and your publisher/ad-slot IDs are added.</div>
+  <p class="notice" id="premium-info">Premium checkout setup: add your verified payment-provider payment link in the site configuration before accepting payments.</p>
+  <p class="notice" id="affiliate-info">Affiliate disclosure: RANTEX may earn a commission from qualifying purchases made through clearly marked affiliate links. This does not change your price.</p>
+  <p class="notice" id="membership-info">Memberships are not active yet. Do not accept payment until you have configured a real checkout, delivery process, refund terms and support contact.</p>
+</section>
+<section class="wrap" id="about-rantex"><div class="eyebrow">ABOUT RANTEX</div><h2>Wallpapers for your digital world</h2><p class="muted">RANTEX is an independent wallpaper discovery project. We aim to publish original or properly licensed visual content, useful collections and clear download information. Please respect the rights of artists and creators.</p></section>
+<footer><div class="wrap">© <span id="year"></span> RANTEX · CREATE YOUR OWN UNIVERSE.<div class="legal-links"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/contact.html">Contact</a><a href="/disclosure.html">Affiliate disclosure</a></div></div></footer>
 <script>
 const items=[
 ['Nebula Dreams','Space','https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=900&q=85'],
@@ -43,5 +69,51 @@ document.getElementById('chips').addEventListener('click',e=>{if(e.target.datase
 document.getElementById('search').addEventListener('input',render);document.getElementById('sort').addEventListener('change',render);
 document.body.addEventListener('click',e=>{let s=e.target.dataset.save,d=e.target.dataset.download;if(s!==undefined){let i=Number(s);saved=saved.includes(i)?saved.filter(x=>x!==i):[...saved,i];localStorage.setItem('rantexSaved',JSON.stringify(saved));render()}if(d!==undefined){let a=document.createElement('a');a.href=items[Number(d)][2];a.target='_blank';a.rel='noopener';a.click()}});
 document.getElementById('generate').addEventListener('click',()=>{let p=document.getElementById('prompt').value.trim();document.getElementById('genmsg').textContent=p.length<8?'Please enter a more detailed idea.':'Your prompt is ready! AI generation will be enabled after we connect the secure API.'});
+
+// ---- RANTEX MONETIZATION SETTINGS ----
+// Add real URLs/IDs only after the relevant account is approved and configured.
+// Do not put private API keys, passwords or secret tokens in this public file.
+const RANTEX_CONFIG = {
+  premiumCheckoutUrl: "", // Example: your secure Razorpay Payment Link
+  membershipCheckoutUrl: "",
+  affiliateLinks: {
+    phoneAccessories: "",
+    gamingAccessories: "",
+    monitors: ""
+  },
+  adsense: {
+    approved: false,
+    publisherId: "", // Example format: ca-pub-XXXXXXXXXXXXXXXX
+    adSlotId: ""
+  },
+  googleAnalyticsId: "" // Example format: G-XXXXXXXXXX
+};
+document.querySelectorAll('[data-config-action]').forEach(button => {
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    const type = button.dataset.configAction;
+    const url = type === 'premium' ? RANTEX_CONFIG.premiumCheckoutUrl
+      : type === 'membership' ? RANTEX_CONFIG.membershipCheckoutUrl : "";
+    if (url && /^https:\/\//i.test(url)) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    const message = type === 'affiliate'
+      ? 'Affiliate products are not configured yet. Add genuine product links in RANTEX_CONFIG. Clearly disclose affiliate links.'
+      : 'This payment option is not active yet. First create a secure payment link, add delivery/refund details, then paste the link into RANTEX_CONFIG.';
+    alert(message);
+  });
+});
+if (RANTEX_CONFIG.googleAnalyticsId && /^G-[A-Z0-9]+$/.test(RANTEX_CONFIG.googleAnalyticsId)) {
+  const ga = document.createElement('script');
+  ga.async = true;
+  ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(RANTEX_CONFIG.googleAnalyticsId);
+  document.head.appendChild(ga);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){dataLayer.push(arguments);};
+  window.gtag('js', new Date());
+  window.gtag('config', RANTEX_CONFIG.googleAnalyticsId);
+}
+
 document.getElementById('year').textContent=new Date().getFullYear();render();
 </script></body></html>
