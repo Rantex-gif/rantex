@@ -1,19 +1,25 @@
+// RANTEX AI wallpaper endpoint — Cloudflare Pages Function.
+// Uses the Cloudflare Workers AI binding. No API key belongs in browser code.
+
 const MODEL = "@cf/black-forest-labs/flux-1-schnell";
-const MAX_PROMPT_LENGTH = 1500;
+const MAX_PROMPT_LENGTH = 900;
 
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
+  return Response.json(data, {
     status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store"
-    }
+    headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }
   });
 }
 
 export async function onRequestPost({ request, env }) {
+  const origin = request.headers.get("Origin");
+  const siteOrigin = new URL(request.url).origin;
+  if (origin && origin !== siteOrigin) {
+    return json({ error: "This request is not allowed." }, 403);
+  }
+
   if (!env.AI || typeof env.AI.run !== "function") {
-    return json({ error: "Image generation is not configured yet. Add the Workers AI binding named AI in Cloudflare Pages settings, then redeploy." }, 503);
+    return json({ error: "AI is not connected yet. Add a Workers AI binding named AI in Cloudflare Pages settings, then redeploy." }, 503);
   }
 
   let body;
@@ -28,17 +34,17 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "Please enter a more detailed wallpaper prompt (at least 8 characters)." }, 400);
   }
   if (prompt.length > MAX_PROMPT_LENGTH) {
-    return json({ error: `Your prompt is too long. Keep it under ${MAX_PROMPT_LENGTH} characters.` }, 400);
+    return json({ error: `Please keep your prompt under ${MAX_PROMPT_LENGTH} characters.` }, 400);
   }
 
   try {
     const result = await env.AI.run(MODEL, {
-      prompt,
+      prompt: `Create an original, high-quality wallpaper based on this idea: ${prompt}. Detailed composition, polished lighting, crisp visual quality, no text, no watermark.`,
       steps: 4
     });
 
     if (!result || typeof result.image !== "string" || !result.image) {
-      return json({ error: "The image model did not return an image. Please try another prompt." }, 502);
+      return json({ error: "The image model returned no image. Please try another prompt." }, 502);
     }
 
     const binary = atob(result.image);
@@ -55,7 +61,6 @@ export async function onRequestPost({ request, env }) {
       }
     });
   } catch (error) {
-    // Do not return provider details, account identifiers, or secrets to visitors.
     console.error("RANTEX image generation failed:", error?.message || "Unknown error");
     return json({ error: "Image generation failed. Check that Workers AI is enabled for this Pages project and try again." }, 502);
   }
